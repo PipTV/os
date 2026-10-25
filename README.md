@@ -10,7 +10,7 @@
 
 <img src="docs/img/looks.gif" width="720" alt="Pip on a real TV, switching between its layouts">
 
-[▶ Watch the film (38 s)](https://piptv.github.io/os/media/film.mp4)
+[▶ Watch the film (35 s)](https://piptv.github.io/os/media/film.mp4) · [vertical](https://piptv.github.io/os/media/film-vertical.mp4)
 
 </div>
 
