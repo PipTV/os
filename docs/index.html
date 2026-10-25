@@ -39,7 +39,8 @@ h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05; letter-spacing: -0.03
 .steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .step { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
 .step .n { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: #0b0d11; font-weight: 700; font-size: 19px; margin-bottom: 14px; }
-.step b { display: block; font-size: 19px; margin-bottom: 6px; }
+.step .t { display: block; font-size: 19px; font-weight: 600; margin-bottom: 6px; }
+.step p b { color: var(--ink); font-weight: 600; }
 .step p { margin: 0; color: var(--muted); }
 .addr { font: 600 17px ui-monospace, Menlo, monospace; color: var(--ink); background: #0b0d11; border: 1px solid var(--line); padding: 2px 8px; border-radius: 8px; }
 .small { font-size: 13px; color: var(--muted); margin-top: 14px; }
@@ -122,9 +123,9 @@ footer { padding: 72px 0 48px; color: var(--muted); font-size: 14px; display: fl
     <h2>Install in three steps.</h2>
     <p class="sub">All on the TV, with the remote. No computer, no cables, no settings to change.</p>
     <div class="steps3">
-      <div class="step"><span class="n">1</span><b>Get Downloader</b><p>On your TV, open <b>Google Play</b>, search <b>Downloader</b> and install it. It's free, by AFTVnews.</p></div>
-      <div class="step"><span class="n">2</span><b>Type piptv.github.io</b><p>Open Downloader, type <span class="addr">piptv.github.io</span> and press <b>Go</b>.</p></div>
-      <div class="step"><span class="n">3</span><b>Press Install Pip</b><p>Press OK on the big button, then <b>Install</b>. If the TV asks, allow Downloader to install apps.</p></div>
+      <div class="step"><span class="n">1</span><span class="t">Get Downloader</span><p>On your TV, open <b>Google Play</b>, search <b>Downloader</b> and install it. It's free, by AFTVnews.</p></div>
+      <div class="step"><span class="n">2</span><span class="t">Type piptv.github.io</span><p>Open Downloader, type <span class="addr">piptv.github.io</span> and press <b>Go</b>.</p></div>
+      <div class="step"><span class="n">3</span><span class="t">Press Install Pip</span><p>Press OK on the big button, then <b>Install</b>. If the TV asks, allow Downloader to install apps.</p></div>
     </div>
     <p class="small" style="margin-top:22px">Done: open <b>Pip OS</b> from your apps. To remove it, uninstall Pip OS in Settings → Apps. It doesn't change your TV's system. Have a computer? <code>adb install pip-tv.apk</code> works too.</p>
   </section>
