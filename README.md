@@ -8,7 +8,9 @@
 
 [Website](https://piptv.github.io/os/) · [Download for TV](https://github.com/PipTV/os/releases/latest/download/pip-tv.apk) · [Phone remote (Android)](https://github.com/PipTV/os/releases/latest/download/pip-remote.apk) · [Privacy](https://piptv.github.io/os/privacy.html)
 
-<img src="docs/img/calm.webp" width="860" alt="Pip's home screen on a TV">
+<img src="docs/img/looks.gif" width="720" alt="Pip on a real TV, switching between its layouts">
+
+[▶ Watch the 37-second film](https://piptv.github.io/os/media/film.mp4)
 
 </div>
 
@@ -38,26 +40,7 @@
 2. Open Downloader, type **`piptv.github.io`** and press Go.
 3. Press OK on **Install Pip**, then **Install**. If the TV asks, allow Downloader to install apps.
 
-Then open **Pip OS** from your apps. With a computer: `adb install pip-tv.apk`.
-
-**Phone remote.** A touch surface, keyboard and volume, plus a live preview of the TV. Pair once with a 4-digit code.
-- **Send to TV.** Share a YouTube or Netflix link on your phone and it opens in that app on the TV.
-- **Fast on cheap TVs.** Focus moves at 60 fps in four of the five layouts, measured on a Mali-G52 TV with 1.8 GB of RAM.
-
-| Spotlight | App icons | Mosaic |
-|---|---|---|
-| <img src="docs/img/spotlight.webp" alt="Spotlight layout"> | <img src="docs/img/appicons.webp" alt="App icons layout"> | <img src="docs/img/mosaic.webp" alt="Mosaic layout"> |
-| **Make it yours** | **Inputs** | **Quick settings** |
-| <img src="docs/img/panel.webp" alt="Make it yours panel"> | <img src="docs/img/inputs.webp" alt="Inputs"> | <img src="docs/img/quick.webp" alt="Quick settings"> |
-
-## Install on your TV
-
-**Without a computer**
-1. On the TV, install **Downloader** (by AFTVnews) from the Play Store.
-2. In the TV's settings, allow Downloader to install unknown apps (*Settings → Apps → Security & restrictions → Unknown sources*; the path differs a little by brand).
-3. Open Downloader and enter:
-   `piptv.github.io`
-4. Install, then open **Pip OS** from your apps.
+Then open **Pip OS** from your apps.
 
 **With a computer (adb)**
 ```bash

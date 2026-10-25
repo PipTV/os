@@ -65,6 +65,13 @@ nav.top .links a.pill.small, .pill.small { background: var(--blue); color: #fff;
 .hero .sub { font-size: clamp(19px, 2.4vw, 24px); color: var(--muted); max-width: 640px; margin: 20px auto 30px; }
 .cta { display: flex; gap: 28px; justify-content: center; align-items: center; flex-wrap: wrap; }
 .cta .more { font-size: 19px; }
+button.more { font: inherit; font-size: inherit; color: var(--blue); background: none; border: 0; padding: 0; cursor: pointer; }
+button.more:hover { text-decoration: underline; }
+.play span { display: inline-grid; place-items: center; width: 1.3em; height: 1.3em; margin-left: 4px; border: 1.5px solid currentColor; border-radius: 50%; font-size: .6em; vertical-align: .15em; padding-left: .12em; }
+dialog.film { padding: 0; border: 0; background: #000; width: min(1100px, 94vw); border-radius: 14px; overflow: hidden; }
+dialog.film::backdrop { background: rgba(0, 0, 0, .86); backdrop-filter: blur(6px); }
+dialog.film video { display: block; width: 100%; aspect-ratio: 16 / 9; }
+dialog.film .close { position: absolute; top: 10px; right: 10px; z-index: 1; width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(40, 40, 44, .8); color: #fff; font-size: 18px; cursor: pointer; }
 .tv { margin: 64px auto 0; max-width: 980px; }
 .tv .screen { border-radius: 18px; overflow: hidden; border: 10px solid #111; box-shadow: 0 0 0 1px #2a2a2c, 0 60px 140px rgba(41, 151, 255, .12); background: #000; aspect-ratio: 16 / 9; }
 .tv video { width: 100%; height: 100%; object-fit: cover; }
@@ -171,6 +178,7 @@ footer a { color: var(--muted); }
     <div class="cta">
       <a class="pill big" id="install-now" href="https://github.com/PipTV/os/releases/latest/download/pip-tv.apk">Install free</a>
       <a class="more" href="#install">How to install ›</a>
+      <button class="more play" id="film-open" type="button">Watch the film <span aria-hidden="true">▶</span></button>
     </div>
     <div class="tv">
       <div class="screen">
@@ -263,6 +271,11 @@ footer a { color: var(--muted); }
   </section>
 </main>
 
+<dialog class="film" id="film" aria-label="The Pip film">
+  <button class="close" id="film-close" type="button" aria-label="Close">✕</button>
+  <video id="film-video" src="media/film.mp4" poster="media/film-poster.webp" controls playsinline preload="none"></video>
+</dialog>
+
 <footer>
   <div class="wrap">
     <span>Pip OS 0.9 beta</span>
@@ -276,6 +289,11 @@ footer a { color: var(--muted); }
 <script>
   // On a TV browser (Downloader), the remote's OK lands on "Install free" at once.
   document.getElementById("install-now").focus({ preventScroll: true });
+  const film = document.getElementById("film"), filmVideo = document.getElementById("film-video");
+  document.getElementById("film-open").addEventListener("click", () => { film.showModal(); filmVideo.currentTime = 0; filmVideo.play().catch(() => {}); });
+  document.getElementById("film-close").addEventListener("click", () => film.close());
+  film.addEventListener("click", e => { if (e.target === film) film.close(); });
+  film.addEventListener("close", () => filmVideo.pause());
 </script>
 </body>
 </html>
