@@ -321,13 +321,14 @@ h1 { margin: 6px 0 16px; font-size: 34px; font-weight: 700; letter-spacing: -.02
   const key = (k) => { buzz(); api("/api/key?k=" + k, { method: "POST" }).catch(() => toast("The TV isn't answering")); };
   document.querySelectorAll("[data-key]").forEach((b) => (b.onclick = () => { b.classList.add("hit"); setTimeout(() => b.classList.remove("hit"), 120); key(b.dataset.key); }));
   (() => {
-    const pad = $("pad"), dot = $("dot"); let sx = 0, sy = 0, moved = false, hold = null, held = false;
+    const pad = $("pad"), dot = $("dot"); let sx = 0, sy = 0, moved = false, hold = null, held = false, down = false;
     const show = (e) => { const r = pad.getBoundingClientRect(); dot.style.left = (e.clientX - r.left) + "px"; dot.style.top = (e.clientY - r.top) + "px"; dot.style.opacity = 1; };
     pad.addEventListener("pointerdown", (e) => {
-      sx = e.clientX; sy = e.clientY; moved = false; held = false; pad.setPointerCapture(e.pointerId); show(e); $("padHint").style.opacity = 0;
+      down = true; sx = e.clientX; sy = e.clientY; moved = false; held = false; pad.setPointerCapture(e.pointerId); show(e); $("padHint").style.opacity = 0;
       hold = setTimeout(() => { held = true; buzz(20); key("HOLD"); }, 650);
     });
     pad.addEventListener("pointermove", (e) => {
+      if (!down) return; // a mouse passing over the pad isn't a swipe
       show(e);
       const dx = e.clientX - sx, dy = e.clientY - sy;
       if (Math.hypot(dx, dy) > 38) {
@@ -336,8 +337,8 @@ h1 { margin: 6px 0 16px; font-size: 34px; font-weight: 700; letter-spacing: -.02
         sx = e.clientX; sy = e.clientY;
       }
     });
-    const end = () => { clearTimeout(hold); dot.style.opacity = 0; };
-    pad.addEventListener("pointerup", () => { end(); if (!moved && !held) key("OK"); });
+    const end = () => { down = false; clearTimeout(hold); dot.style.opacity = 0; };
+    pad.addEventListener("pointerup", () => { const tap = down && !moved && !held; end(); if (tap) key("OK"); });
     pad.addEventListener("pointercancel", end);
   })();
 
