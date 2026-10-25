@@ -77,10 +77,12 @@ section.band { padding-block: 120px; }
 h2.big { font-size: clamp(40px, 6.4vw, 72px); line-height: 1.06; letter-spacing: -0.012em; font-weight: 700; }
 .lead { font-size: clamp(19px, 2.2vw, 22px); color: var(--muted); max-width: 680px; margin: 22px auto 0; }
 
-/* Pip */
-.pip { background: linear-gradient(var(--sky-top), var(--sky-mid) 46%, var(--sky-low) 70%, var(--snow) 70.2%); color: var(--night); padding-block: 96px 110px; text-align: center; }
-.pip img { width: min(300px, 62vw); margin: 0 auto; }
-.pip h2 { font-size: clamp(44px, 7vw, 80px); letter-spacing: -0.02em; margin-top: 54px; }
+/* Pip: he stands right on the snow line, the words sit on the snow */
+.pip { text-align: center; color: var(--night); }
+.pip .sky { background: linear-gradient(var(--sky-top), var(--sky-mid) 58%, var(--sky-low)); padding-top: 96px; }
+.pip .sky img { width: min(300px, 62vw); margin: 0 auto -8px; position: relative; }
+.pip .snow { background: var(--snow); padding-block: 44px 110px; }
+.pip h2 { font-size: clamp(44px, 7vw, 80px); letter-spacing: -0.02em; }
 .pip p { font-size: clamp(19px, 2.2vw, 23px); max-width: 640px; margin: 18px auto 0; color: #3b4558; }
 
 /* looks gallery */
@@ -180,8 +182,8 @@ footer a { color: var(--muted); }
   </header>
 
   <section class="pip" aria-labelledby="pip-title">
-    <div class="wrap">
-      <img src="img/pip.svg" alt="Pip, a small penguin holding a TV remote" width="300" height="300">
+    <div class="sky"><img src="img/pip.svg" alt="Pip, a small penguin holding a TV remote" width="300" height="300"></div>
+    <div class="snow wrap">
       <h2 id="pip-title">Hi, I'm Pip.</h2>
       <p>I'll keep your TV calm and simple. No rows of things to buy, no autoplaying trailers. Just your apps, on a landscape you love.</p>
     </div>
