@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy · Pip</title>
+<link rel="icon" href="img/icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg: #0b0d11; --surface: #15181e; --ink: #f5f5f7; --muted: #a1a1a6; --line: rgba(255,255,255,.09); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16.5px/1.6 Inter, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px 64px; }
+header { display: flex; align-items: center; gap: 12px; padding: 22px 0 8px; }
+header img { width: 30px; height: 30px; border-radius: 8px; }
+header a { color: inherit; text-decoration: none; font-weight: 600; }
+h1 { font-size: 38px; letter-spacing: -0.03em; margin: 36px 0 8px; }
+h2 { font-size: 21px; margin: 34px 0 8px; }
+p, li { color: #d2d2d7; }
+.muted { color: var(--muted); }
+a { color: #4da3ff; }
+table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin-top: 18px; }
+td, th { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><img src="img/icon.png" alt=""><a href="./">Pip</a></header>
+<h1>Privacy</h1>
+<p class="muted">Pip OS (the TV app) and Pip Remote (the phone app) · Updated 25 October 2026</p>
+
+<h2>The short version</h2>
+<p>There is no account, no advertising, no analytics and no tracking. Pip doesn't collect personal data. Your settings stay on your TV and your phone.</p>
+
+<h2>What leaves your TV</h2>
+<ul>
+<li><b>Weather.</b> The weather widget sends the city name you set to <a href="https://open-meteo.com">Open-Meteo</a> to get the forecast. Like any web request, it carries your IP address. Nothing else is sent.</li>
+<li><b>Links you choose to open.</b> When you send a link from your phone, the TV opens it in the matching app (for example YouTube), which then works under that app's own privacy policy.</li>
+</ul>
+
+<h2>What stays on your home network</h2>
+<ul>
+<li><b>The phone remote</b> talks to the TV directly over your Wi‑Fi. The web remote needs the code shown on the TV. The Android app pairs once with a 4-digit code and keeps a key, which only your TV accepts.</li>
+<li><b>Network debugging (optional).</b> If you turn it on and allow Pip on the TV, Pip connects to the TV's own debugging service at 127.0.0.1 to pass remote key presses to other apps. It is never reachable from outside the TV through Pip.</li>
+</ul>
+
+<h2>What Pip reads on the TV</h2>
+<ul>
+<li>The list of installed apps, their icons and sizes, to show them on the home screen and in Clean up.</li>
+<li>The TV's inputs (HDMI and aerial), free storage, free memory and whether you're online, for Inputs and Quick settings.</li>
+<li><b>Home button helper (optional, off unless you turn it on).</b> An accessibility service that only notices when Google TV's own home screen comes to the front, so the Home button can bring you back to Pip. It cannot read what's on screen.</li>
+</ul>
+
+<h2>Changes</h2>
+<p>If a future version adds crash reports or usage statistics, they will be opt-in, described here before release, and contain no personal data.</p>
+
+<h2>Contact</h2>
+<p>Questions or requests: <a href="https://github.com/PipTV/os/issues">open an issue on GitHub</a>.</p>
+</div></body></html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pip: TV launcher and phone remote</title>
+<meta name="description" content="A calm, Apple TV–style home screen for Android TV and Google TV, with a remote on your phone. Free download.">
+<meta property="og:title" content="Pip: TV launcher and phone remote">
+<meta property="og:description" content="A calm, Apple TV–style home screen for Android TV and Google TV, with a remote on your phone.">
+<meta property="og:image" content="https://piptv.github.io/os/img/calm.webp">
+<link rel="icon" href="img/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0d11; --surface: #15181e; --ink: #f5f5f7; --muted: #a1a1a6; --line: rgba(255,255,255,.09); --accent: #0a84ff;
+}
+:root:not([data-theme="light"]) { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.55 Inter, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
+header img { width: 34px; height: 34px; border-radius: 9px; }
+header b { font-weight: 600; }
+header nav { margin-left: auto; display: flex; gap: 20px; font-size: 15px; color: var(--muted); }
+header nav a { text-decoration: none; }
+header nav a:hover { color: var(--ink); }
+.hero { text-align: center; padding: 56px 0 32px; }
+h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.05; letter-spacing: -0.035em; margin: 0 0 18px; font-weight: 700; }
+.lede { font-size: clamp(18px, 2.2vw, 22px); color: var(--muted); max-width: 640px; margin: 0 auto 32px; }
+.cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none; }
+.btn.primary { background: var(--ink); color: #0b0d11; }
+.btn.ghost { background: var(--surface); border: 1px solid var(--line); }
+.btn.big { font-size: 22px; padding: 18px 40px; }
+.btn:focus-visible { outline: 4px solid var(--accent); outline-offset: 4px; }
+.steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
+.step .n { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--ink); color: #0b0d11; font-weight: 700; font-size: 19px; margin-bottom: 14px; }
+.step b { display: block; font-size: 19px; margin-bottom: 6px; }
+.step p { margin: 0; color: var(--muted); }
+.addr { font: 600 17px ui-monospace, Menlo, monospace; color: var(--ink); background: #0b0d11; border: 1px solid var(--line); padding: 2px 8px; border-radius: 8px; }
+.small { font-size: 13px; color: var(--muted); margin-top: 14px; }
+.shot { margin: 44px auto 0; border-radius: 18px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 40px 120px rgba(0,0,0,.6); }
+.shot img { display: block; width: 100%; height: auto; }
+section { padding: 72px 0 0; }
+h2 { font-size: clamp(26px, 3.4vw, 38px); letter-spacing: -0.025em; margin: 0 0 10px; }
+.sub { color: var(--muted); margin: 0 0 30px; max-width: 640px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.card img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.card div { padding: 14px 16px 18px; }
+.card b { display: block; font-weight: 600; margin-bottom: 4px; }
+.card span { color: var(--muted); font-size: 15px; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 32px; }
+.features b { display: block; font-weight: 600; margin-bottom: 4px; }
+.features p { margin: 0; color: var(--muted); font-size: 15.5px; }
+ol.steps { padding-left: 22px; margin: 0; }
+ol.steps li { margin-bottom: 12px; }
+code { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface); border: 1px solid var(--line); padding: 3px 7px; border-radius: 7px; word-break: break-all; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+.panel h3 { margin: 0 0 12px; font-size: 19px; }
+footer { padding: 72px 0 48px; color: var(--muted); font-size: 14px; display: flex; gap: 18px; flex-wrap: wrap; border-top: 1px solid var(--line); margin-top: 80px; padding-top: 28px; }
+.badge { display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; margin-bottom: 18px; }
+@media (max-width: 820px) {
+  .grid, .features, .two, .steps3 { grid-template-columns: 1fr; }
+  header nav { display: none; }
+  section { padding-top: 56px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="img/icon.png" alt="">
+    <b>Pip</b>
+    <nav><a href="#install">Install</a><a href="#remote">Phone remote</a><a href="privacy.html">Privacy</a><a href="https://github.com/PipTV/os">GitHub</a></nav>
+  </header>
+
+  <div class="hero">
+    <span class="badge">Free · Beta 0.9 · Android TV &amp; Google TV</span>
+    <h1>Your TV, quietly beautiful.</h1>
+    <p class="lede">An Apple TV–style home screen for Android TV and Google TV, with a remote on your phone. No ads. No clutter.</p>
+    <div class="cta">
+      <a class="btn primary big" id="install-now" href="https://github.com/PipTV/os/releases/latest/download/pip-tv.apk" autofocus>Install Pip</a>
+      <a class="btn ghost" href="#install">How to install</a>
+    </div>
+    <p class="small">Free · Android TV and Google TV · about 15 MB</p>
+    <div class="shot"><img src="img/calm.webp" alt="Pip's home screen: a lake and mountains, a clock and one row of apps" width="1600" height="900"></div>
+  </div>
+
+  <section>
+    <h2>Five looks. Change them in seconds.</h2>
+    <p class="sub">Press Menu on the remote, or use your phone. Every change shows on the TV at once.</p>
+    <div class="grid">
+      <div class="card"><img src="img/spotlight.webp" alt="Spotlight layout" loading="lazy"><div><b>Spotlight</b><span>A greeting and one row of apps.</span></div></div>
+      <div class="card"><img src="img/appicons.webp" alt="App icons layout" loading="lazy"><div><b>App icons</b><span>Ten big cards in the apps' own colors.</span></div></div>
+      <div class="card"><img src="img/mosaic.webp" alt="Mosaic layout" loading="lazy"><div><b>Mosaic</b><span>Your favourite app, big.</span></div></div>
+      <div class="card"><img src="img/widgets.webp" alt="Widgets layout" loading="lazy"><div><b>Widgets</b><span>Clock, weather and what to watch next.</span></div></div>
+      <div class="card"><img src="img/panel.webp" alt="Make it yours panel" loading="lazy"><div><b>Make it yours</b><span>Photo, tiles, names, font, clock.</span></div></div>
+      <div class="card"><img src="img/inputs.webp" alt="Inputs" loading="lazy"><div><b>Inputs</b><span>TV and every HDMI port, named.</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Everything a TV home should do.</h2>
+    <p class="sub">And nothing it shouldn't.</p>
+    <div class="features">
+      <div><b>Real landscapes</b><p>Twelve public-domain 4K photos from US national parks.</p></div>
+      <div><b>Quick settings</b><p>Sleep timer, screen saver, Wi‑Fi, picture, sound and turn off, all in one place.</p></div>
+      <div><b>Clean up</b><p>Tick the apps you never use and hide or uninstall them together.</p></div>
+      <div><b>Send to TV</b><p>Share a YouTube or Netflix link on your phone. It opens on the TV.</p></div>
+      <div><b>Fast on cheap TVs</b><p>60 fps focus moves in four of five layouts on a 1.8 GB TV. Every number is published.</p></div>
+      <div><b>Private</b><p>No account, no ads, no tracking. Your remote talks to your TV and nothing else.</p></div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install in three steps.</h2>
+    <p class="sub">All on the TV, with the remote. No computer, no cables, no settings to change.</p>
+    <div class="steps3">
+      <div class="step"><span class="n">1</span><b>Get Downloader</b><p>On your TV, open <b>Google Play</b>, search <b>Downloader</b> and install it. It's free, by AFTVnews.</p></div>
+      <div class="step"><span class="n">2</span><b>Type piptv.github.io</b><p>Open Downloader, type <span class="addr">piptv.github.io</span> and press <b>Go</b>.</p></div>
+      <div class="step"><span class="n">3</span><b>Press Install Pip</b><p>Press OK on the big button, then <b>Install</b>. If the TV asks, allow Downloader to install apps.</p></div>
+    </div>
+    <p class="small" style="margin-top:22px">Done: open <b>Pip OS</b> from your apps. To remove it, uninstall Pip OS in Settings → Apps. It doesn't change your TV's system. Have a computer? <code>adb install pip-tv.apk</code> works too.</p>
+  </section>
+
+  <section id="remote">
+    <h2>A remote that lives on your phone.</h2>
+    <p class="sub">On the TV, press Menu → Connect a phone and scan the code. The remote opens in your phone's browser, nothing to install. On Android, you can also get the app, which adds Share → Pip Remote to send links to the TV.</p>
+    <div class="cta" style="justify-content:flex-start">
+      <a class="btn ghost" href="https://github.com/PipTV/os/releases/latest/download/pip-remote.apk">Android remote app</a>
+      <span class="btn ghost" style="opacity:.6">iPhone app: coming</span>
+    </div>
+  </section>
+
+  <footer>
+    <span>Pip 0.9 beta</span>
+    <a href="privacy.html">Privacy</a>
+    <a href="credits.html">Photo credits</a>
+    <a href="https://github.com/PipTV/os/issues">Report a problem</a>
+  </footer>
+</div>
+<script>
+  // On a TV (Downloader's browser), the remote's OK should hit "Install Pip" straight away.
+  document.getElementById("install-now").focus({ preventScroll: true });
+</script>
+</body>
+</html>
