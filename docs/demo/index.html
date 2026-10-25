@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pip demo</title>
+<meta name="description" content="Try Pip in your browser: the real phone remote, connected to a pretend TV. Nothing is saved or sent.">
+<meta property="og:title" content="Try Pip in your browser">
+<meta property="og:image" content="https://piptv.github.io/os/media/film-poster.webp">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* The demo: a pretend Pip TV on the left, the real web remote in a phone on the right.
+   The TV is drawn in container units, so it scales with its frame like a real screen. */
+:root {
+  color-scheme: dark;
+  --ink: #f5f5f7; --muted: #a1a1a6; --faint: #6e6e73; --line: rgba(255, 255, 255, .12); --blue: #2997ff;
+  --display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --serif: "New York", "Iowan Old Style", Georgia, "Times New Roman", serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #000; color: var(--ink); font: 17px/1.47 var(--text); -webkit-font-smoothing: antialiased; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+nav.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: rgba(0, 0, 0, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+nav.top .wrap { display: flex; align-items: center; gap: 22px; height: 48px; }
+.brand { display: flex; align-items: center; gap: 8px; color: var(--ink); font: 600 17px var(--display); }
+.brand img { width: 26px; height: 26px; }
+.brand:hover { text-decoration: none; }
+nav.top .links { margin-left: auto; display: flex; gap: 18px; align-items: center; font-size: 13px; }
+nav.top .links a { color: var(--muted); }
+.pill { display: inline-flex; align-items: center; border-radius: 999px; background: var(--blue); color: #fff; font-weight: 500; white-space: nowrap; }
+nav.top .links a.pill { color: #fff; font-size: 12px; padding: 4px 12px; }
+.pill:hover { text-decoration: none; filter: brightness(1.08); }
+
+header.intro { text-align: center; padding-block: 48px 30px; }
+.eyebrow { color: var(--blue); font: 600 15px var(--text); margin: 0 0 8px; }
+h1 { font: 700 clamp(38px, 6vw, 64px)/1.05 var(--display); letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.lead { color: var(--muted); font-size: clamp(17px, 2vw, 20px); max-width: 640px; margin: 14px auto 0; text-wrap: balance; }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 40px; align-items: center; padding-block: 10px 30px; }
+@media (max-width: 920px) { .stage { grid-template-columns: minmax(0, 1fr); gap: 28px; } }
+
+/* the TV */
+.tv { min-width: 0; }
+.tv .bezel { border-radius: 16px; padding: 9px; background: linear-gradient(180deg, #2b2c30, #0b0b0d); box-shadow: 0 0 0 1px #2a2a2c, 0 50px 120px rgba(41, 151, 255, .10); }
+.screen { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 9px; background: #000; container-type: inline-size; font-family: var(--text); color: #fff; user-select: none; }
+.tv .stand { width: 22%; height: 9px; margin: 0 auto; background: linear-gradient(#1a1a1c, #0d0d0e); border-radius: 0 0 8px 8px; }
+.tv .caption { color: var(--faint); font-size: 13px; text-align: center; margin-top: 14px; }
+
+.wall, .wall2 { position: absolute; inset: 0; background: center / cover no-repeat; transition: opacity .6s ease; }
+.scrim { position: absolute; inset: 0; background: linear-gradient(170deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,0) 34%), linear-gradient(0deg, rgba(0,0,0,.38) 0%, rgba(0,0,0,0) 38%); }
+.clock { position: absolute; left: 4cqw; top: 3.4cqw; text-shadow: 0 .2cqw 1.2cqw rgba(0,0,0,.35); }
+.clock .time { font: 300 6cqw/1 var(--display); letter-spacing: -.03em; }
+.clock .date { font: 600 1.25cqw var(--text); margin-top: .7cqw; opacity: .92; }
+.clock .wx { font: 600 1.15cqw var(--text); margin-top: .5cqw; opacity: .85; }
+.serif .clock .time, .serif .headline b { font-family: var(--serif); font-weight: 400; letter-spacing: -.01em; }
+.topbtns { position: absolute; right: 3.6cqw; top: 3.4cqw; display: flex; gap: 1cqw; }
+.topbtns span { width: 3.2cqw; height: 3.2cqw; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.16); backdrop-filter: blur(8px); transition: transform .18s, background .18s; }
+.topbtns span svg { width: 1.5cqw; height: 1.5cqw; }
+.topbtns span.on { background: #fff; color: #111; transform: scale(1.18); }
+
+.row { position: absolute; display: flex; gap: 1.4cqw; align-items: flex-end; }
+.tile { position: relative; border-radius: 1cqw; display: grid; place-items: center; font: 700 1.6cqw var(--display); letter-spacing: -.01em; transition: transform .22s cubic-bezier(.2,.9,.3,1.2), box-shadow .22s; box-shadow: 0 .6cqw 1.6cqw rgba(0,0,0,.28); }
+.tile.on { transform: scale(1.12); box-shadow: 0 1cqw 3cqw rgba(0,0,0,.45), 0 0 0 .22cqw rgba(255,255,255,.95); z-index: 2; }
+.tile .name { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: .9cqw; font: 600 1.05cqw var(--text); white-space: nowrap; text-shadow: 0 .1cqw .6cqw rgba(0,0,0,.6); }
+.t-ARTWORK .tile { color: #fff; }
+.t-BRAND .tile { color: #fff; }
+.t-GLASS .tile { background: rgba(255,255,255,.2) !important; backdrop-filter: blur(10px); color: #fff; }
+.t-LOGO .tile { background: transparent !important; box-shadow: none; color: #fff; text-shadow: 0 .2cqw 1cqw rgba(0,0,0,.6); font-size: 2cqw; }
+.t-LOGO .tile.on { box-shadow: 0 0 0 .22cqw rgba(255,255,255,.95); background: rgba(255,255,255,.12) !important; }
+
+.headline { position: absolute; left: 4cqw; top: 33%; text-shadow: 0 .2cqw 1.4cqw rgba(0,0,0,.4); }
+.headline small { display: block; font: 700 1cqw var(--text); letter-spacing: .14em; opacity: .85; margin-bottom: .8cqw; }
+.headline b { display: block; font: 600 4.4cqw/1.04 var(--display); letter-spacing: -.02em; max-width: 46cqw; }
+.widget { position: absolute; border-radius: 1.4cqw; background: rgba(255,255,255,.16); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); padding: 1.4cqw 1.6cqw; }
+.widget .big { font: 300 4cqw/1 var(--display); letter-spacing: -.02em; }
+.widget .small { font: 600 1.05cqw var(--text); opacity: .85; margin-top: .6cqw; }
+
+.overlay { position: absolute; inset: 0; display: none; }
+.overlay.show { display: block; }
+.app { display: grid; place-items: center; text-align: center; }
+.app .big { font: 700 7cqw/1 var(--display); letter-spacing: -.03em; }
+.app .sub { font: 600 1.4cqw var(--text); opacity: .85; margin-top: 1.2cqw; }
+.app .bar { position: absolute; left: 6cqw; right: 6cqw; bottom: 5cqw; height: .45cqw; border-radius: 1cqw; background: rgba(255,255,255,.3); }
+.app .bar i { display: block; height: 100%; width: 0; border-radius: 1cqw; background: #fff; }
+.app .back { position: absolute; left: 6cqw; bottom: 2cqw; font: 600 1.1cqw var(--text); opacity: .7; }
+.sheet { position: absolute; left: 4cqw; right: 4cqw; bottom: 3cqw; border-radius: 1.6cqw; background: rgba(22,27,34,.9); padding: 1.8cqw 2cqw; }
+.sheet h3 { margin: 0 0 1.2cqw; font: 700 1.6cqw var(--display); }
+.sheet .cards { display: flex; gap: 1.2cqw; }
+.sheet .cards span { flex: 1; border-radius: 1cqw; background: rgba(255,255,255,.1); padding: 1.2cqw; font: 600 1.15cqw var(--text); }
+.sheet .cards span.on { background: #fff; color: #111; }
+.side { position: absolute; right: 3cqw; top: 3cqw; bottom: 3cqw; width: 30cqw; border-radius: 1.6cqw; background: rgba(22,27,34,.9); padding: 1.8cqw; }
+.side h3 { margin: 0 0 1.2cqw; font: 700 1.6cqw var(--display); }
+.side .grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9cqw; }
+.side .grid span { border-radius: 1cqw; background: rgba(255,255,255,.1); padding: 1.1cqw; font: 600 1.1cqw var(--text); }
+.search { position: absolute; left: 50%; top: 6cqw; transform: translateX(-50%); width: 56cqw; border-radius: 1.6cqw; background: rgba(22,27,34,.92); padding: 1.6cqw 2cqw; }
+.search .field { font: 500 2cqw var(--text); border-bottom: .15cqw solid rgba(255,255,255,.3); padding-bottom: .8cqw; min-height: 3.4cqw; }
+.search .field i { display: inline-block; width: .15cqw; height: 2.2cqw; background: #fff; vertical-align: -0.3cqw; margin-left: .2cqw; animation: blink 1s steps(1) infinite; }
+.search .hint { font: 500 1.1cqw var(--text); opacity: .6; margin-top: 1cqw; }
+@keyframes blink { 50% { opacity: 0; } }
+.hud { position: absolute; right: 3cqw; top: 50%; transform: translateY(-50%); width: 3.4cqw; height: 22cqw; border-radius: 2cqw; background: rgba(22,27,34,.85); display: none; flex-direction: column; justify-content: flex-end; align-items: center; padding: 1cqw 0; gap: .8cqw; }
+.hud.show { display: flex; }
+.hud .lvl { width: .9cqw; flex: 1; border-radius: 1cqw; background: rgba(255,255,255,.2); position: relative; overflow: hidden; }
+.hud .lvl i { position: absolute; left: 0; right: 0; bottom: 0; background: #fff; }
+.hud b { font: 700 1.1cqw var(--text); }
+.glyph { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 9cqw; height: 9cqw; border-radius: 50%; background: rgba(0,0,0,.45); display: none; place-items: center; font: 700 3.4cqw var(--text); }
+.glyph.show { display: grid; }
+.toast { position: absolute; left: 50%; bottom: 3cqw; transform: translateX(-50%); background: rgba(22,27,34,.92); padding: .9cqw 1.8cqw; border-radius: 999px; font: 600 1.25cqw var(--text); display: none; white-space: nowrap; }
+.toast.show { display: block; }
+.off { position: absolute; inset: 0; background: #000; display: none; place-items: center; color: #555; font: 600 1.4cqw var(--text); }
+.off.show { display: grid; }
+.bubble { position: absolute; right: 3cqw; bottom: 3cqw; display: flex; align-items: center; gap: 1cqw; background: rgba(255,255,255,.92); color: #1c2433; border-radius: 1.6cqw; padding: 1cqw 1.6cqw 1cqw 1cqw; font: 600 1.3cqw var(--text); box-shadow: 0 1cqw 3cqw rgba(0,0,0,.3); transition: opacity .5s, transform .5s; }
+.bubble img { width: 4.2cqw; height: 4.2cqw; }
+.bubble.gone { opacity: 0; transform: translateY(1cqw); pointer-events: none; }
+.theme-FAMICOM .wall { filter: saturate(1.25) contrast(1.05); }
+.theme-FAMICOM .tile { border-radius: .3cqw; font-family: ui-monospace, Menlo, monospace; }
+.theme-ARCADE .tile.on { box-shadow: 0 0 0 .22cqw #ff3ec8, 0 0 3cqw #ff3ec8; }
+
+/* the phone */
+.phone { justify-self: center; width: 360px; max-width: 100%; height: 740px; border-radius: 52px; padding: 12px; background: linear-gradient(140deg, #5b5e66 0%, #2a2c31 30%, #1a1b1f 70%, #46484f 100%); box-shadow: 0 40px 100px rgba(0,0,0,.6); }
+.phone iframe { width: 100%; height: 100%; border: 0; border-radius: 41px; background: #000; display: block; }
+@media (max-width: 920px) { .phone { height: 680px; } }
+
+.tips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding-block: 18px 30px; }
+.tips div { border-top: 1px solid var(--line); padding-top: 14px; font-size: 15px; color: var(--muted); }
+.tips b { display: block; color: var(--ink); font-weight: 600; margin-bottom: 4px; }
+@media (max-width: 920px) { .tips { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .tips { grid-template-columns: 1fr; } }
+.actions { display: flex; gap: 22px; justify-content: center; align-items: center; flex-wrap: wrap; padding-block: 10px 60px; }
+.actions .pill { font-size: 17px; padding: 12px 24px; }
+.actions button { font: inherit; color: var(--blue); background: none; border: 0; cursor: pointer; padding: 0; }
+.actions button:hover { text-decoration: underline; }
+footer { border-top: 1px solid var(--line); padding-block: 22px 36px; color: var(--faint); font-size: 12px; }
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Pip OS">
+  <div class="wrap">
+    <a class="brand" href="../"><img src="../img/pip.svg" alt="">Pip OS</a>
+    <div class="links"><a href="../#remote">Remote</a><a href="../#install">Install</a><a class="pill" href="https://github.com/PipTV/os/releases/latest/download/pip-tv.apk">Get Pip</a></div>
+  </div>
+</nav>
+
+<main>
+  <header class="intro wrap">
+    <p class="eyebrow">Live demo</p>
+    <h1>Try Pip in your browser.</h1>
+    <p class="lead">The real phone remote, connected to a pretend TV. Swipe, tap, type, send a link, change the look. Nothing is saved or sent.</p>
+  </header>
+
+  <div class="stage wrap">
+    <div class="tv">
+      <div class="bezel">
+        <div class="screen" id="screen" role="img" aria-label="A pretend TV running Pip">
+          <div class="wall" id="wall"></div>
+          <div class="wall2" id="wall2" style="opacity:0"></div>
+          <div class="scrim"></div>
+          <div id="home"></div>
+          <div class="overlay app" id="app"></div>
+          <div class="overlay" id="sheetLayer"></div>
+          <div class="hud" id="hud"><div class="lvl"><i id="lvl"></i></div><b id="vol">12</b></div>
+          <div class="glyph" id="glyph"></div>
+          <div class="toast" id="toast"></div>
+          <div class="bubble" id="bubble"><img src="../img/pip.svg" alt=""><span>Hi, I'm Pip. Try the remote on the right.</span></div>
+          <div class="off" id="off">Press Power on the remote</div>
+        </div>
+      </div>
+      <div class="stand"></div>
+      <p class="caption">A pretend TV with made-up apps. On a real TV, Pip shows your own apps.</p>
+    </div>
+    <div class="phone"><iframe id="remote" src="remote.html#t=DEMO42" title="Pip's phone remote"></iframe></div>
+  </div>
+
+  <div class="tips wrap">
+    <div><b>Move and open</b>Swipe on the touch surface to move, tap to open an app. Back or the TV key comes home.</div>
+    <div><b>Change the look</b>Press LOOK for the next layout, or open Customize for photos, tiles, names and the font.</div>
+    <div><b>Type and send</b>The keyboard types on the TV. The send button opens a video link in the right app.</div>
+    <div><b>Volume and power</b>Plus, minus and mute work like a real remote. Power turns the TV off and on.</div>
+  </div>
+
+  <div class="actions">
+    <a class="pill" href="https://github.com/PipTV/os/releases/latest/download/pip-tv.apk">Install Pip free</a>
+    <a href="../#install">How to install ›</a>
+    <button type="button" id="reset">Start over</button>
+  </div>
+</main>
+
+<footer><div class="wrap">This page runs entirely in your browser. The remote on the right is the same page your TV opens when you scan its QR code.</div></footer>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const screen = $("screen"), frame = $("remote");
+  const ICONS = {
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>',
+    tv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="5" width="18" height="12" rx="2.5"/><path d="M8 21h8" stroke-linecap="round"/></svg>',
+    sliders: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>',
+    gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8" stroke-linecap="round"/></svg>',
+  };
+  const PLACE = { mcdonald: "Lake McDonald", lamar: "Lamar Valley", gardenwall: "Garden Wall", denali: "Denali", dunes: "Utah Dunes", electric: "Electric Peak", oldman: "Oldman Lake", larches: "Bowman Lake", ruby: "Ruby Beach", rialto: "Rialto Beach", aurora: "Teton Aurora", prairie: "Prairie Sunrise" };
+  const sounds = Object.fromEntries(["focus", "select", "back"].map((s) => { const a = new Audio("sounds/" + s + ".mp3"); a.volume = 0.45; return [s, a]; }));
+  let last = null, wallUrl = "", wallFlip = false, progress = 0;
+
+  const shade = (hex, f) => {
+    const n = parseInt(hex.slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+    const m = (c) => Math.round(f < 0 ? c * (1 + f) : c + (255 - c) * f);
+    return `rgb(${m(r)}, ${m(g)}, ${m(b)})`;
+  };
+  const tileBg = (tint, style) => style === "ARTWORK" ? `linear-gradient(140deg, ${shade(tint, 0.18)}, ${shade(tint, -0.45)})` : tint;
+  const clock = () => {
+    const d = new Date();
+    return { time: d.getHours() + ":" + String(d.getMinutes()).padStart(2, "0"), date: d.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" }) };
+  };
+  const greeting = () => { const h = new Date().getHours(); return h < 12 ? "GOOD MORNING" : h < 18 ? "GOOD AFTERNOON" : "GOOD EVENING"; };
+
+  function tilesHtml(apps, dock, tv, s, size) {
+    return dock.map((pkg, i) => {
+      const a = apps.find((x) => x.pkg === pkg); if (!a) return "";
+      const on = tv.zone === "DOCK" && tv.index === i && tv.fg === "home" && !tv.overlay;
+      const w = typeof size === "function" ? size(i) : size;
+      const name = s.labels === "ALWAYS" || (s.labels === "FOCUSED" && on) ? `<span class="name">${a.label}</span>` : "";
+      return `<div class="tile${on ? " on" : ""}" style="width:${w}cqw;height:${(w * 9) / 16}cqw;background:${tileBg(a.tint, s.tiles)}">${a.label}${name}</div>`;
+    }).join("");
+  }
+
+  function renderHome(d) {
+    const { state: s, tv, apps, dock } = d;
+    const t = clock();
+    const top = `<div class="topbtns">${["search", "tv", "sliders", "gear"].map((k, i) => `<span class="${tv.zone === "TOP" && tv.index === i && !tv.overlay ? "on" : ""}">${ICONS[k]}</span>`).join("")}</div>`;
+    const clk = s.clock !== false ? `<div class="clock"><div class="time">${t.time}</div><div class="date">${t.date}</div><div class="wx">☁︎ 16° ${s.city || "Istanbul"}</div></div>` : "";
+    let body = "";
+    switch (s.layout) {
+      case "GRID":
+        body = `<div class="row" style="left:4cqw;bottom:11cqw">${tilesHtml(apps, dock, tv, s, 13)}</div>`; break;
+      case "SPOTLIGHT":
+        body = `<div class="headline"><small>${greeting()}</small><b>What are we watching tonight?</b></div><div class="row" style="left:4cqw;bottom:7cqw">${tilesHtml(apps, dock, tv, s, 9.5)}</div>`; break;
+      case "MOSAIC": {
+        const first = tilesHtml(apps, dock.slice(0, 1), tv, s, 30);
+        const small = dock.slice(1, 5).map((pkg, j) => {
+          const i = j + 1, a = apps.find((x) => x.pkg === pkg); if (!a) return "";
+          const on = tv.zone === "DOCK" && tv.index === i && tv.fg === "home" && !tv.overlay;
+          const name = s.labels === "ALWAYS" || (s.labels === "FOCUSED" && on) ? `<span class="name">${a.label}</span>` : "";
+          return `<div class="tile${on ? " on" : ""}" style="position:absolute;left:${(j % 2) * 15.4}cqw;top:${Math.floor(j / 2) * 9.2}cqw;width:14cqw;height:7.9cqw;background:${tileBg(a.tint, s.tiles)}">${a.label}${name}</div>`;
+        }).join("");
+        body = `<div class="row" style="left:4cqw;bottom:9cqw">${first}</div><div style="position:absolute;left:36cqw;bottom:9cqw;width:30cqw;height:17cqw">${small}</div>`;
+        break;
+      }
+      case "WIDGETS":
+        body = `<div class="widget" style="left:4cqw;top:14cqw;width:20cqw"><div class="big">${t.time}</div><div class="small">${t.date}</div></div>
+                <div class="widget" style="left:26cqw;top:14cqw;width:18cqw"><div class="big">16°</div><div class="small">☁︎ ${s.city || "Istanbul"} · light clouds</div></div>
+                <div class="row" style="left:4cqw;bottom:6cqw">${tilesHtml(apps, dock, tv, s, 9.5)}</div>`;
+        break;
+      default:
+        body = `<div class="row" style="left:4cqw;bottom:7.5cqw">${tilesHtml(apps, dock, tv, s, 10.5)}</div>`;
+    }
+    $("home").innerHTML = (s.layout === "WIDGETS" ? "" : clk) + top + body;
+  }
+
+  function renderWall(d) {
+    const s = d.state;
+    const url = s.wallpaper === "PHOTO" && d.photo ? d.photo : "art/" + (PLACE[s.art] ? s.art : "mcdonald") + ".webp";
+    if (url === wallUrl) return;
+    wallUrl = url;
+    const show = wallFlip ? $("wall") : $("wall2"), hide = wallFlip ? $("wall2") : $("wall");
+    show.style.backgroundImage = `url("${url}")`;
+    show.style.opacity = 1; hide.style.opacity = 0;
+    wallFlip = !wallFlip;
+  }
+
+  function renderOverlays(d) {
+    const { tv, apps, state: s } = d;
+    const app = $("app");
+    if (tv.fg !== "home") {
+      const a = apps.find((x) => x.pkg === tv.fg) || { label: "App", tint: "#333" };
+      app.style.background = `radial-gradient(120% 90% at 30% 20%, ${shade(a.tint, 0.1)}, ${shade(a.tint, -0.7)})`;
+      if (!app.classList.contains("show") || app.dataset.pkg !== a.label) {
+        progress = 0;
+        app.innerHTML = `<div><div class="big">${a.label}</div><div class="sub">Now playing on the pretend TV</div></div><div class="bar"><i id="bar"></i></div><div class="back">Back or the TV key: home</div>`;
+        app.dataset.pkg = a.label;
+      }
+      app.classList.add("show");
+    } else app.classList.remove("show");
+
+    const layer = $("sheetLayer");
+    let html = "";
+    if (tv.overlay === "search") html = `<div class="search"><div class="field">${(tv.text || "").replace(/[<>&]/g, "")}<i></i></div><div class="hint">Type on the phone's keyboard. Back closes search.</div></div>`;
+    else if (tv.overlay === "inputs") html = `<div class="sheet"><h3>Inputs</h3><div class="cards"><span class="on">TV<br><small>Live TV</small></span><span>HDMI 1<br><small>PlayStation</small></span><span>HDMI 2<br><small>Connected</small></span><span>HDMI 3<br><small>Nothing plugged in</small></span></div></div>`;
+    else if (tv.overlay === "quick") html = `<div class="side"><h3>Quick settings</h3><div class="grid"><span>Sleep timer<br><small>Off</small></span><span>Screen saver<br><small>Start now</small></span><span>Wi‑Fi<br><small>Home</small></span><span>Picture<br><small>Display</small></span><span>Sound<br><small>Output</small></span><span>Clean up<br><small>Apps, memory</small></span></div></div>`;
+    layer.innerHTML = html;
+    layer.classList.toggle("show", !!html);
+
+    $("hud").classList.toggle("show", tv.hud === "volume");
+    $("vol").textContent = tv.muted ? "×" : tv.volume;
+    $("lvl").style.height = (tv.muted ? 0 : (tv.volume / 30) * 100) + "%";
+    const g = { pause: "❚❚", play: "▶", rewind: "↺ 10", forward: "10 ↻" }[tv.hud];
+    $("glyph").textContent = g || "";
+    $("glyph").classList.toggle("show", !!g);
+    $("toast").textContent = tv.toast || "";
+    $("toast").classList.toggle("show", !!tv.toast);
+    $("off").classList.toggle("show", !tv.power);
+    if (tv.keys > 0) $("bubble").classList.add("gone");
+    screen.className = "screen t-" + (s.tiles || "ARTWORK") + " theme-" + (s.theme || "GLASS") + (s.font === "ELEGANT" ? " serif" : "");
+  }
+
+  function render(d) {
+    last = d;
+    renderWall(d); renderHome(d); renderOverlays(d);
+    if (d.tv.sound && sounds[d.tv.sound]) { const a = sounds[d.tv.sound]; a.currentTime = 0; a.play().catch(() => {}); }
+  }
+
+  addEventListener("message", (e) => {
+    if (e.origin !== location.origin || !e.data || e.data.pipDemo !== "tv") return;
+    render(e.data);
+  });
+  frame.addEventListener("load", () => frame.contentWindow.postMessage({ pipDemo: "hello" }, location.origin));
+  $("reset").addEventListener("click", () => {
+    $("bubble").classList.remove("gone");
+    frame.contentWindow.postMessage({ pipDemo: "reset" }, location.origin);
+  });
+  // the clock and the playing bar tick on their own
+  setInterval(() => {
+    if (!last) return;
+    if (last.tv.fg !== "home" && !last.tv.paused) { progress = Math.min(100, progress + 0.6); const bar = $("bar"); if (bar) bar.style.width = progress + "%"; }
+  }, 500);
+  setInterval(() => { if (last) renderHome(last); }, 15000);
+})();
+</script>
+</body>
+</html>
