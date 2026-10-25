@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a3346"/><stop offset="1" stop-color="#141a26"/>
+    </linearGradient>
+    <linearGradient id="belly" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9eef5"/>
+    </linearGradient>
+    <linearGradient id="beak" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#f28a1e"/>
+    </linearGradient>
+  </defs>
+  <!-- feet -->
+  <ellipse cx="214" cy="452" rx="40" ry="16" fill="#f59a2a"/>
+  <ellipse cx="298" cy="452" rx="40" ry="16" fill="#f59a2a"/>
+  <!-- body -->
+  <path d="M256 70c-92 0-150 78-150 190 0 112 58 196 150 196s150-84 150-196C406 148 348 70 256 70z" fill="url(#body)"/>
+  <!-- flippers -->
+  <path d="M118 238c-30 40-40 92-26 130 10 4 26-14 38-40 10-26 10-58 2-88z" fill="#1a2130"/>
+  <path d="M394 238c30 40 40 92 26 130-10 4-26-14-38-40-10-26-10-58-2-88z" fill="#1a2130"/>
+  <!-- face and belly -->
+  <path d="M256 150c-26-26-96-22-110 34-10 40 6 66 22 82-14 30-20 62-16 96 8 58 50 86 104 86s96-28 104-86c4-34-2-66-16-96 16-16 32-42 22-82-14-56-84-60-110-34z" fill="url(#belly)"/>
+  <!-- eyes -->
+  <ellipse cx="216" cy="206" rx="15" ry="19" fill="#141a26"/>
+  <ellipse cx="296" cy="206" rx="15" ry="19" fill="#141a26"/>
+  <circle cx="221" cy="199" r="5" fill="#fff"/>
+  <circle cx="301" cy="199" r="5" fill="#fff"/>
+  <!-- beak -->
+  <path d="M256 228c14 0 26 6 26 13 0 9-14 22-26 22s-26-13-26-22c0-7 12-13 26-13z" fill="url(#beak)"/>
+  <!-- remote, held in front -->
+  <g transform="rotate(-8 256 340)">
+    <rect x="226" y="292" width="60" height="112" rx="26" fill="#d9dee6"/>
+    <rect x="226" y="292" width="60" height="112" rx="26" fill="none" stroke="#c4cad4" stroke-width="2"/>
+    <circle cx="256" cy="324" r="15" fill="#f5f7fa" stroke="#c4cad4" stroke-width="2"/>
+    <circle cx="256" cy="324" r="5" fill="#0a84ff"/>
+    <rect x="244" y="356" width="24" height="5" rx="2.5" fill="#aab2be"/>
+    <rect x="244" y="370" width="24" height="5" rx="2.5" fill="#aab2be"/>
+  </g>
+  <!-- little hands over the remote -->
+  <ellipse cx="226" cy="352" rx="18" ry="13" fill="#1a2130" transform="rotate(-20 226 352)"/>
+  <ellipse cx="288" cy="346" rx="18" ry="13" fill="#1a2130" transform="rotate(20 288 346)"/>
+</svg>
