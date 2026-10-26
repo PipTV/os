@@ -28,15 +28,30 @@ th { color: var(--muted); font-weight: 500; }
 <div class="wrap">
 <header><img src="img/icon.png" alt=""><a href="./">Pip</a></header>
 <h1>Privacy</h1>
-<p class="muted">Pip OS (the TV app) and Pip Remote (the phone app) · Updated 25 October 2026</p>
+<p class="muted">Pip OS (the TV app) and Pip Remote (the phone app) · Updated 26 October 2026</p>
 
 <h2>The short version</h2>
-<p>There is no account, no advertising, no analytics and no tracking. Pip doesn't collect personal data. Your settings stay on your TV and your phone.</p>
+<p>There is no account and no tracking. The TV app never shows ads. The free phone app shows ads on one screen (Customize), only after Google's consent form where the law requires it, and never with Pip Pro. Your settings stay on your TV and your phone.</p>
 
 <h2>What leaves your TV</h2>
 <ul>
 <li><b>Weather.</b> The weather widget sends the city name you set to <a href="https://open-meteo.com">Open-Meteo</a> to get the forecast. Like any web request, it carries your IP address. Nothing else is sent.</li>
+<li><b>Pictures and the film.</b> Landscape photos and the welcome film download from this website (GitHub Pages). Update checks ask GitHub for the newest release. These are ordinary web requests and carry your IP address.</li>
 <li><b>Links you choose to open.</b> When you send a link from your phone, the TV opens it in the matching app (for example YouTube), which then works under that app's own privacy policy.</li>
+</ul>
+
+<h2>Pip Pro and payments</h2>
+<ul>
+<li><b>Buying.</b> Payment is handled by Lemon Squeezy, our merchant of record. They see your card and email; Pip never does. Their privacy policy applies to the checkout.</li>
+<li><b>Your license.</b> When an order is paid, our license service (on Cloudflare) makes a signed license and keeps three things: the order number, the email you bought with (so you can restore the purchase) and, for 30 days, the short code your TV showed, so the TV can pick the license up. Nothing else.</li>
+<li><b>On your devices,</b> the license and, after a rewarded ad, the end time of your free Pro day are stored locally. Pip checks licenses offline.</li>
+</ul>
+
+<h2>Ads in the free phone app</h2>
+<ul>
+<li>Pip Remote (free) uses Google AdMob for one banner at the end of Customize and for an optional rewarded ad that unlocks Pro for 24 hours. AdMob may use your device's advertising ID and IP address to serve and measure ads, as described in <a href="https://policies.google.com/technologies/ads">Google's ad policy</a>.</li>
+<li>Where required (for example in the EU, the UK and under KVKK), Google's consent form appears first, and you can change your choice later under <b>Pip Pro → Privacy choices</b>.</li>
+<li>The remote screen and the TV never show ads. Pip Pro removes them all.</li>
 </ul>
 
 <h2>What stays on your home network</h2>
@@ -49,11 +64,11 @@ th { color: var(--muted); font-weight: 500; }
 <ul>
 <li>The list of installed apps, their icons and sizes, to show them on the home screen and in Clean up.</li>
 <li>The TV's inputs (HDMI and aerial), free storage, free memory and whether you're online, for Inputs and Quick settings.</li>
-<li><b>Home button helper (optional, off unless you turn it on).</b> An accessibility service that only notices when Google TV's own home screen comes to the front, so the Home button can bring you back to Pip. It cannot read what's on screen.</li>
+<li><b>Home button helper (optional, off unless you turn it on).</b> An accessibility service that catches the Home button and notices when the TV's own home screen comes to the front, so the Home button brings you back to Pip. Other keys pass straight through, and it cannot read what's on screen. You can turn it on yourself in Settings, or ask Pip to do it through the TV's network debugging; either way it is your choice, and Quick settings turns it off again.</li>
 </ul>
 
 <h2>Changes</h2>
-<p>If a future version adds crash reports or usage statistics, they will be opt-in, described here before release, and contain no personal data.</p>
+<p>If a future version adds crash reports or usage statistics, they will be opt-in, described here before release, and contain no personal data. Material changes to this page are noted in the release notes.</p>
 
 <h2>Contact</h2>
 <p>Questions or requests: <a href="https://github.com/PipTV/os/issues">open an issue on GitHub</a>.</p>
